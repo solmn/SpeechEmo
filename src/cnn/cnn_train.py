@@ -14,7 +14,9 @@ from keras.regularizers import l2
 from sklearn.metrics import precision_recall_fscore_support, roc_auc_score
 import matplotlib.pyplot as plt
 import csv
-def prepare_data( feature_folder = "../../datasets/features/cnn/new_pos_neu_iemocap_dataset_features/"):
+from keras.optimizers import SGD
+
+def prepare_data( feature_folder = "../../datasets/features/cnn/imocap_ravdes_savee_features/"):
     X_train = np.array([])
     Y_train = np.array([])
     X_test = np.array([])
@@ -40,7 +42,50 @@ def prepare_data( feature_folder = "../../datasets/features/cnn/new_pos_neu_iemo
     print("X_test: " + str(X_test.shape))
     print("Y_test: " + str(Y_test.shape))
     return X_train, Y_train, X_test, Y_test
+def build_Vgg_model(X_train, Y_train, X_test, Y_test):
+    # input: 60x41 data frames with 2 channels => (60, 41, 2) tensors
+    input_shape = (X_train.shape[1], X_train.shape[2], X_train.shape[3])
+    model = Sequential()
+    model.add(Conv2D(64, kernel_size=(2, 2), activation='relu', input_shape=input_shape))
+    model.add(Conv2D(64, (2, 2), activation='relu',padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
+    model.add(Dropout(0.2))
 
+    model.add(Conv2D(128, (2, 2), activation='relu',padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
+    model.add(Dropout(0.2))
+    model.add(Conv2D(128, (2, 2), activation='relu',padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
+    model.add(Dropout(0.2))
+
+    model.add(Conv2D(256, (2, 2), activation='relu',padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
+    model.add(Dropout(0.2))
+    model.add(Conv2D(256, (2, 2), activation='relu',padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
+    model.add(Dropout(0.2))
+
+    model.add(Conv2D(512, (2, 2), activation='relu',padding='same'))
+    model.add(MaxPooling2D(pool_size=(1, 1), strides=(1,1)))
+    model.add(Dropout(0.2))
+    model.add(Conv2D(512, (2, 2), activation='relu',padding='same'))
+    model.add(MaxPooling2D(pool_size=(1, 1), strides=(1,1)))
+    model.add(Dropout(0.2))
+    
+    model.add(Flatten())
+    model.add(Dense(1024, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(1024, activation='relu'))
+    model.add(Dropout(0.5))
+
+    model.add(Dense(Y_train.shape[1]))
+    model.add(Activation('softmax'))
+    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
+    model.compile(loss='categorical_crossentropy',
+              optimizer='adadelta',
+              metrics=['accuracy'])
+    
+    return model
 def build_model(X_train, Y_train, X_test, Y_test):
     # input: 60x41 data frames with 2 channels => (60, 41, 2) tensors
     input_shape = (X_train.shape[1], X_train.shape[2], X_train.shape[3])
@@ -64,18 +109,21 @@ def build_model(X_train, Y_train, X_test, Y_test):
 
     model.add(Dense(Y_train.shape[1]))
     model.add(Activation('softmax'))
+    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(loss='categorical_crossentropy',
-              optimizer='adadelta',
+              optimizer=sgd,
               metrics=['accuracy'])
     
     return model
 def main():
     print("Loading features....")
     X_train, Y_train, X_test, Y_test = prepare_data()
-    model = build_model(X_train, Y_train, X_test, Y_test)
+    # model = build_model(X_train, Y_train, X_test, Y_test)
+    model = build_Vgg_model(X_train, Y_train,X_test, Y_test)
+    model.summary()
     print("Training Model...")
     batch_size = 120
-    nb_epoch = 60
+    nb_epoch = 200
     history = model.fit(X_train, Y_train,
                   batch_size=batch_size,
                   epochs=nb_epoch,
@@ -85,10 +133,10 @@ def main():
     print('Test score:', score[0])
     print('Test accuracy:', score[1])
     model_json = model.to_json()
-    with open("../../models/cnn/new_pos_neu_iemocap/new_pos_neu_iemocap_model.json", "w") as json_file:
+    with open("../../models/cnn/iemocap_ravdes_savee_pos_neu/iemocap_ravdes_savee_pos_neu__80_60_frame_model.json", "w") as json_file:
         json_file.write(model_json)
-    model.save_weights("../../models/cnn/new_pos_neu_iemocap/new_pos_neu_iemocap_weights.h5")
-    file = open("../../models/cnn/new_pos_neu_iemocap/new_pos_neu_iemocap_metrics.txt", "w")
+    model.save_weights("../../models/cnn/iemocap_ravdes_savee_pos_neu/iemocap_ravdes_savee_pos_neu__80_60_frame_weights.h5")
+    file = open("../../models/cnn/iemocap_ravdes_savee_pos_neu/iemocap_ravdes_savee_pos_neu__80_60_frame_metrics.txt", "w")
     los = "loss:"+str(score[0])
     acc = "accuracy:" + str(score[1])
     file.write(los)

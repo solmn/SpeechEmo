@@ -4,15 +4,14 @@ import os
 
 def count():
     total = 0
-    path = "../datasets/corpus/cnn_imeocap_all_dataset/"
-    # path = "../datasets/corpus/cnn_pos_neu_iemocap/"
+    path = "../datasets/corpus/iemocap_ravdes_savee_pos_neu/"
+    # path = "../datasets/corpus/i/"
     classes = os.listdir(path)
     for i, c in enumerate(classes):
         n_files = os.listdir(path + c)
         for k, f in enumerate(n_files):
             total += get_duration(path + c + "/" + f)
     return total
-
 def get_duration(path):
     wav = wave.open(path, mode='r')
     (nchannels, sampwidth, framerate, nframes, comptype, compname) = wav.getparams()

@@ -21,15 +21,12 @@ def windows( data, window_size ):
     while start < len(data):
         yield start, start + window_size
         start += (window_size /2)
-
-
 def extract_features( input_path, class_name, class_names, bands, frames ):
     window_size = 512 * (frames -1)
     log_spectograms = []
     labels = []
     class_files = os.listdir(input_path + class_name)
     n_files = len(class_files)
-
     for i, aud_filename in enumerate( class_files ):
         audio_path = input_path + class_name + "/" + aud_filename
         print ("Preprocessing: " + class_name + ": " + str(i) +  " of " + str(n_files) + " :" + aud_filename)
@@ -53,7 +50,6 @@ def preprocess ( input_path = "cnn_d/", output_path = "cnn_f/" ):
     frames = 41
     if not os.path.exists( output_path ):
         os.mkdir( output_path, 0755 )
-
     class_names = get_class_names(path = input_path)
     print("Preprocessing...")
     for i , class_name in enumerate( class_names ):
@@ -70,7 +66,7 @@ def preprocess ( input_path = "cnn_d/", output_path = "cnn_f/" ):
         print("Saved " + label_file)
     print("==========================================================DONE===================================================")
 def main():
-    preprocess(input_path = "../../datasets/corpus/new_pos_neu_iemocap_dataset/", output_path = "../../datasets/features/cnn/new_pos_neu_iemocap_dataset_features/")
+    preprocess(input_path = "../../datasets/corpus/iemocap_ravdes_savee_pos_neu/", output_path = "../../datasets/features/cnn/imocap_ravdes_savee_features/")
     
 
 main()
