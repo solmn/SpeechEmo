@@ -4,7 +4,7 @@ import os
 
 def count():
     total = 0
-    path = "../datasets/corpus/iemocap_ravdes_savee_pos_neu/"
+    path = "../datasets/corpus/cnn_imeocap_all_dataset_agumented/"
     # path = "../datasets/corpus/i/"
     classes = os.listdir(path)
     for i, c in enumerate(classes):

@@ -15,8 +15,14 @@ from sklearn.metrics import precision_recall_fscore_support, roc_auc_score
 import matplotlib.pyplot as plt
 import csv
 from keras.optimizers import SGD
+from sklearn.utils import shuffle
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+from keras.optimizers import *
 
-def prepare_data( feature_folder = "../../datasets/features/cnn/imocap_ravdes_savee_features/"):
+def prepare_data( feature_folder = "../../datasets/features/cnn/cnn_augumented/"):
     X_train = np.array([])
     Y_train = np.array([])
     X_test = np.array([])
@@ -46,36 +52,31 @@ def build_Vgg_model(X_train, Y_train, X_test, Y_test):
     # input: 60x41 data frames with 2 channels => (60, 41, 2) tensors
     input_shape = (X_train.shape[1], X_train.shape[2], X_train.shape[3])
     model = Sequential()
-    model.add(Conv2D(64, kernel_size=(2, 2), activation='relu', input_shape=input_shape))
-    model.add(Conv2D(64, (2, 2), activation='relu',padding='same'))
+    model.add(Conv2D(64, kernel_size=(2, 2), activation='relu', input_shape=input_shape,kernel_initializer='glorot_uniform'))
+    model.add(Conv2D(64, (2, 2), activation='relu',padding='same',kernel_initializer='glorot_uniform'))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
     model.add(Dropout(0.2))
 
-    model.add(Conv2D(128, (2, 2), activation='relu',padding='same'))
+    model.add(Conv2D(128, (2, 2), activation='relu',padding='same',kernel_initializer='glorot_uniform'))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
     model.add(Dropout(0.2))
-    model.add(Conv2D(128, (2, 2), activation='relu',padding='same'))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
-    model.add(Dropout(0.2))
-
-    model.add(Conv2D(256, (2, 2), activation='relu',padding='same'))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
-    model.add(Dropout(0.2))
-    model.add(Conv2D(256, (2, 2), activation='relu',padding='same'))
+    model.add(Conv2D(128, (2, 2), activation='relu',padding='same',kernel_initializer='glorot_uniform'))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
     model.add(Dropout(0.2))
 
-    model.add(Conv2D(512, (2, 2), activation='relu',padding='same'))
-    model.add(MaxPooling2D(pool_size=(1, 1), strides=(1,1)))
+    model.add(Conv2D(256, (2, 2), activation='relu',padding='same',kernel_initializer='glorot_uniform'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
     model.add(Dropout(0.2))
-    model.add(Conv2D(512, (2, 2), activation='relu',padding='same'))
-    model.add(MaxPooling2D(pool_size=(1, 1), strides=(1,1)))
+    model.add(Conv2D(256, (2, 2), activation='relu',padding='same',kernel_initializer='glorot_uniform'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,2)))
     model.add(Dropout(0.2))
+
+    
     
     model.add(Flatten())
     model.add(Dense(1024, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(1024, activation='relu'))
+    model.add(Dense(512, activation='relu'))
     model.add(Dropout(0.5))
 
     model.add(Dense(Y_train.shape[1]))
@@ -111,19 +112,45 @@ def build_model(X_train, Y_train, X_test, Y_test):
     model.add(Activation('softmax'))
     sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(loss='categorical_crossentropy',
-              optimizer=sgd,
+              optimizer='adam',
               metrics=['accuracy'])
     
     return model
+def plot_confusion_matrix(cm, classes,
+                          normalize=False,
+                          title='Confusion matrix',
+                          cmap=plt.cm.Blues,save_name="cm"):
+    fig = plt.figure()
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j], fmt),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    fig.savefig(save_name+".png")
 def main():
     print("Loading features....")
     X_train, Y_train, X_test, Y_test = prepare_data()
-    # model = build_model(X_train, Y_train, X_test, Y_test)
-    model = build_Vgg_model(X_train, Y_train,X_test, Y_test)
-    model.summary()
+    X_train, Y_train = shuffle(X_train, Y_train, random_state=42)
+    X_test, Y_test = shuffle(X_test, Y_test, random_state=42)
+
+    model = build_model(X_train, Y_train, X_test, Y_test)
+    # model = build_Vgg_model(X_train, Y_train,X_test, Y_test)
+    # model.summary()
     print("Training Model...")
-    batch_size = 120
-    nb_epoch = 200
+    batch_size = 200
+    nb_epoch = 100
     history = model.fit(X_train, Y_train,
                   batch_size=batch_size,
                   epochs=nb_epoch,
@@ -133,15 +160,22 @@ def main():
     print('Test score:', score[0])
     print('Test accuracy:', score[1])
     model_json = model.to_json()
-    with open("../../models/cnn/iemocap_ravdes_savee_pos_neu/iemocap_ravdes_savee_pos_neu__80_60_frame_model.json", "w") as json_file:
+    with open("../../models/cnn/cnn_au.json", "w") as json_file:
         json_file.write(model_json)
-    model.save_weights("../../models/cnn/iemocap_ravdes_savee_pos_neu/iemocap_ravdes_savee_pos_neu__80_60_frame_weights.h5")
-    file = open("../../models/cnn/iemocap_ravdes_savee_pos_neu/iemocap_ravdes_savee_pos_neu__80_60_frame_metrics.txt", "w")
+    model.save_weights("../../models/cnn/cnn_au.h5")
+    file = open("../../models/cnn/cnn_au.txt", "w")
     los = "loss:"+str(score[0])
     acc = "accuracy:" + str(score[1])
     file.write(los)
     file.write(acc)
     file.close()
+    prediction = model.predict(X_test)
+    y_pred = prediction.argmax(1)
+    cm = confusion_matrix(Y_test, y_pred)
+    classes = ['fear', 'surprise', 'neutral', 'angry', 'sad', 'happy']
+    plot_confusion_matrix(cm, classes=classes, normalize=False,
+						  title='Confusion matrix(test)',save_name="cnn_speech_emotpy_test")
+    plt.show()
     # assert len(X_train) == len(Y_train)
     # q = np.random.permutation(len(X_train))
     # X_train = X_train[q]

@@ -66,7 +66,7 @@ def preprocess ( input_path = "cnn_d/", output_path = "cnn_f/" ):
         print("Saved " + label_file)
     print("==========================================================DONE===================================================")
 def main():
-    preprocess(input_path = "../../datasets/corpus/iemocap_ravdes_savee_pos_neu/", output_path = "../../datasets/features/cnn/imocap_ravdes_savee_features/")
+    preprocess(input_path = "../../datasets/corpus/cnn_imeocap_all_dataset_agumented/", output_path = "../../datasets/features/cnn/cnn_augumented/")
     
 
 main()
