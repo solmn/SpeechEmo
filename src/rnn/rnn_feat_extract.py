@@ -81,7 +81,7 @@ def extract_features(input_path = "rnn_d/", output_path = "rnn_features_pos_neu/
     return np.array(train_features), np.array(train_labels), np.array(test_features), np.array(test_labels)
 
 def pre_process():
-    output_path = "rnn_features_pos_neu/"
+    output_path = "rnn_features_new/"
     X_train, Y_train, X_test, Y_test = extract_features()
     if not os.path.exists(output_path):
         os.mkdir(output_path)

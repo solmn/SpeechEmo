@@ -2,12 +2,10 @@ import numpy as np
 from keras.models import model_from_json
 import os
 import librosa
-EMOTIONS = ['fear', 'surprise','neutral','angry','sad','happy'
-]
-
-
+EMOTIONS = ['fear', 'surprise','neutral','angry','sad','happy']
 def load_model():
-    json_file = open('model/rnn4_model.json', 'r')
+    graph = "../models/cnn/baseline/cnn_baseline_model.json"
+    weight = "../models/cnn/baseline/cnn_baseline_weights.h5"
     loaded_model_json = json_file.read()
     json_file.close
     loaded_model = model_from_json(loaded_model_json)
@@ -69,11 +67,11 @@ def score(predictions):
 def predict(file, actual):
     feature_x = extract_features_array(file, bands = 20, frames = 41)
     predictions = model.predict(feature_x)
+
     # score(predictions)
     # predictions = prediction[0]
     # ind = np.argpartition(predictions[0], -2)[-2:]
     # ind[np.argsort(predictions[0][ind])]
-    
     # ind = ind[::-1]
     # print "Actual:", actual, " Top guess: ", EMOTIONS[ind[0]], " (",round(predictions[0,ind[0]],3),")"
     # print "2nd guess: ", EMOTIONS[ind[1]], " (",round(predictions[0,ind[1]],3),")"

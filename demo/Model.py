@@ -8,11 +8,11 @@ class Model:
         self.EMOTIONS = ['fear', 'surprise','neutral','angry','sad','happy']
         self.type = 0;
     def load_model(self):
-        graph = "model/cnn_baseline_model.json"
-        weight = "model/cnn_baseline_weights.h5"
+        graph = "../models/cnn/baseline/cnn_baseline_model.json"
+        weight = "../models/cnn/baseline/cnn_baseline_weights.h5"
         if(self.type ==1):
-            graph = "model/rnn_baseline_model.json"
-            weight = "model/rnn_baseline_weights.h5"
+            graph = "../models/rnn/baseline/rnn_baseline_model.json"
+            weight = "../models/rnn/baseline/rnn_baseline_weights.h5"
         json_file = open(graph, 'r')
         loaded_model_json = json_file.read()
         json_file.close
@@ -124,34 +124,37 @@ class Model:
         predictions = model.predict(feature_x)
         return self.score(predictions)
 model = Model()
-print("------------------------Happy----------------")
-print("CNN:1: "+model.cnn_predict("test/happy1.wav"))
-print("RNN:1: "+model.rnn_predict("test/test_happy1.wav"))
-print("CNN:2: "+model.cnn_predict("test/happy2.wav"))
-print("RNN:2: "+model.rnn_predict("test/test_happy2.wav"))
-print("----------------------------------------------\n\n")
-print("------------------------Angry----------------")
-print("CNN:1: "+model.cnn_predict("test/angry1.wav"))
-print("RNN:1: "+model.rnn_predict("test/test_ang.wav"))
-print("CNN:2: "+ model.cnn_predict("test/angry2.wav"))
-print("RNN:2: "+model.rnn_predict("test/test_ang2.wav"))
-print("----------------------------------------------\n\n")
-print("------------------------Sad----------------")
-print("CNN:1: "+model.cnn_predict("test/sad1.wav"))
-print("RNN:1: "+model.rnn_predict("test/sad1.wav"))
-print("CNN:2: "+model.cnn_predict("test/sad2.wav"))
-print("RNN:2: "+model.rnn_predict("test/sad2.wav"))
-print("----------------------------------------------\n\n")
-print("------------------------Fear----------------")
-print("CNN:1: "+model.cnn_predict("test/fear1.wav"))
-print("RNN:1: "+model.rnn_predict("test/fear1.wav"))
-print("CNN:2: "+model.cnn_predict("test/fear2.wav"))
-print("RNN:2: "+model.rnn_predict("test/fear2.wav"))
-print("----------------------------------------------\n\n")
+# print("------------------------Happy----------------")
+print("CNN: Actual: Happy, Predicted: "+model.cnn_predict("test/happy1.wav"))
+print("CNN: Actual: Sad, Predicted: "+model.cnn_predict("test/sad.wav"))
+print("CNN: Actual: Neutral, Predicted: "+model.cnn_predict("test/neutral.wav"))
+print("CNN: Actual: Surprise, Predicted: "+model.cnn_predict("test/surprise.wav"))
+# print("RNN:1: "+model.rnn_predict("test/test_happy1.wav"))
+# print("CNN: "+model.cnn_predict("test/happy2.wav"))
+# print("RNN:2: "+model.rnn_predict("test/test_happy2.wav"))
+# print("----------------------------------------------\n\n")
+# print("------------------------Angry----------------")
+# print("CNN:1: "+model.cnn_predict("test/angry1.wav"))
+# print("RNN:1: "+model.rnn_predict("test/test_ang.wav"))
+# print("CNN:2: "+ model.cnn_predict("test/angry2.wav"))
+# print("RNN:2: "+model.rnn_predict("test/test_ang2.wav"))
+# print("----------------------------------------------\n\n")
+# print("------------------------Sad----------------")
+# print("CNN:1: "+model.cnn_predict("test/sad1.wav"))
+# print("RNN:1: "+model.rnn_predict("test/sad1.wav"))
+# print("CNN:2: "+model.cnn_predict("test/sad2.wav"))
+# print("RNN:2: "+model.rnn_predict("test/sad2.wav"))
+# print("----------------------------------------------\n\n")
+# print("------------------------Fear----------------")
+# print("CNN:1: "+model.cnn_predict("test/fear1.wav"))
+# print("RNN:1: "+model.rnn_predict("test/fear1.wav"))
+# print("CNN:2: "+model.cnn_predict("test/fear2.wav"))
+# print("RNN:2: "+model.rnn_predict("test/fear2.wav"))
+# print("----------------------------------------------\n\n")
 
-print("------------------------Surprise----------------")
-print("CNN:1: "+model.cnn_predict("test/sur1.wav"))
-print("RNN:1: "+model.rnn_predict("test/sur1.wav"))
-print("CNN:2: "+model.cnn_predict("test/sur2.wav"))
-print("RNN:2: "+model.rnn_predict("test/sur2.wav"))
-print("----------------------------------------------\n\n")
+# print("------------------------Surprise----------------")
+# print("CNN:1: "+model.cnn_predict("test/sur1.wav"))
+# print("RNN:1: "+model.rnn_predict("test/sur1.wav"))
+# print("CNN:2: "+model.cnn_predict("test/sur2.wav"))
+# print("RNN:2: "+model.rnn_predict("test/sur2.wav"))
+# print("----------------------------------------------\n\n")

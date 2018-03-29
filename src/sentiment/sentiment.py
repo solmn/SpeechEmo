@@ -4,7 +4,7 @@ from keras.models import Sequential
 from keras.layers import Dense,Dropout
 from keras.layers import Flatten,Bidirectional
 from keras.layers.embeddings import Embedding
-from keras.optimizers import SGD
+from keras.optimizers import SGD, Adam
 from keras.layers import Dense, Embedding, LSTM
 
 from util import *
@@ -62,7 +62,7 @@ class sentiment:
         X,Y = shuffle(X, Y, random_state=42)
         Y = [self.encode_class(y, ["Positive", "Neutral", "Negative"]) for y in Y]
         X = [one_hot(d, 2000) for d in X]
-        X = pad_sequences(X, maxlen=30, padding='post')
+        X = pad_sequences(X, maxlen=50, padding='post')
         x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size = 0.30, random_state=42)
         X_train = np.array(x_train)
         Y_train = np.array(y_train)
@@ -73,11 +73,21 @@ class sentiment:
     def build_model(self):
         print("Building the model")
         model = Sequential()
-        model.add(Embedding(2000, 128, input_length = 30))
-        model.add(LSTM(128,dropout=0.2))
-        model.add(Dense(3, activation='softmax'))
+        model.add(Embedding(2000, 32, input_length = 50))
+        # model.add(LSTM(64 ,return_sequences=True))
+        # model.add(Dropout(0.5))
+        # model.add(LSTM(128))
+        # model.add(Dropout(0.5))
+        # model.add(Dense(3, activation='softmax'))
+        model.add(Bidirectional(LSTM(64, return_sequences=True)))
+        model.add(Dropout(0.2))
+        model.add(Bidirectional(LSTM(64)))
+        model.add(Dropout(0.2))
+        model.add(Dense(3))
+        model.add(Dropout(0.5))
+        model.add(Activation('softmax'))
         # sgd = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
-        model.compile(loss='categorical_crossentropy',optimizer=sgd,metrics=['accuracy'])
+        model.compile(loss='categorical_crossentropy',optimizer=Adam(lr=1e-4),metrics=['accuracy'])
         return model
     
     def b_conv(self):

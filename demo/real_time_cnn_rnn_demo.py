@@ -39,7 +39,7 @@ class Demo(object):
         title = Label(f, text="Speech Emotion Classifier", fg="#33bbff", bg="#00111a", pady=20)
         title.config(font=("Courier", 40))
         title.pack()
-        im = Image.open('mic.png')
+        im = Image.open('icon.png')
         re = im.resize((70, 70),Image.ANTIALIAS)
         img = ImageTk.PhotoImage(re)
         self.status = Label(f,text="Record", fg="white", bg="#00111a")
@@ -64,7 +64,7 @@ class Demo(object):
         a.set_facecolor('#00111a') 
         t = arange(0.0, 0.3, 0.01)
         s = sin(2*pi*t)
-        sf, self.signal = wavfile.read("happy.wav")
+        sf, self.signal = wavfile.read("test/happy1.wav")
         a.plot(self.signal)
         
         dataPlot = FigureCanvasTkAgg(fig, master=frame)
