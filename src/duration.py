@@ -4,15 +4,17 @@ import os
 
 def count():
     total = 0
-    path = "../datasets/corpus/IEMOCAP_angry_sad_excited_neutral_test_train/"
+    path = "../datasets/corpus/pos_neu_neg/"
     # path = "../datasets/corpus/i/"
     classes = os.listdir(path)
     for i, c in enumerate(classes):
         t = 0
-        n_files = os.listdir(path + c + "/train/")
+        n_files = os.listdir(path + c +"/")
         for k, f in enumerate(n_files):
-            total += get_duration(path + c + "/train/" + f)
-            t += get_duration(path + c + "/train/" + f)
+           
+            total += get_duration(path + c + "/" + f)
+            t += get_duration(path + c + "/"+f)
+        print("=============================================================================")
         print(c + ":" + get_time(t))
     return total
 def get_duration(path):

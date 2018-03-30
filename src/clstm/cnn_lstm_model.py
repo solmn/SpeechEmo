@@ -14,6 +14,7 @@ from keras.models import Model
 from sklearn.utils import shuffle
 
 input_path = "../../datasets/features/cnn_lstm_features/"
+
 def load_features(input_path =""):
     
     X_train = []
@@ -89,13 +90,13 @@ def build_model(X_train, Y_train, X_test, Y_test):
     model = Sequential()
     inpu_s = (None, X_train[0].shape[1], X_train[0].shape[2], X_train[0].shape[3])
     print(inpu_s)
-    model.add(TimeDistributed(Conv2D(32, kernel_size=(6,6), padding="same", activation="relu"), input_shape=inpu_s))
+    model.add(TimeDistributed(Conv2D(32, kernel_size=(4,4), padding="same", activation="relu"), input_shape=inpu_s))
     model.add(TimeDistributed(MaxPooling2D(pool_size=(3, 3),  padding="same")))
     model.add(TimeDistributed(Dropout(0.2)))
-    model.add(TimeDistributed(Conv2D(64, kernel_size=(6,6), activation="relu", padding="same")))
+    model.add(TimeDistributed(Conv2D(64, kernel_size=(4,4), activation="relu", padding="same")))
     model.add(TimeDistributed(MaxPooling2D(pool_size=(3, 3), padding="same")))
     model.add(TimeDistributed(Dropout(0.2)))
-    model.add(TimeDistributed(Conv2D(64, kernel_size=(6,6), padding="same", activation="relu")))
+    model.add(TimeDistributed(Conv2D(64, kernel_size=(4,4), padding="same", activation="relu")))
     model.add(TimeDistributed(MaxPooling2D(pool_size=(3, 3), padding="same")))
     model.add(TimeDistributed(Dropout(0.2)))
     model.add(TimeDistributed(Flatten()))
@@ -170,10 +171,10 @@ def main():
     print('Test score:', score[0])
     print('Test accuracy:', score[1])
     model_json = model.to_json()
-    with open("../../models/cnn/cnn_lstm__3_.json", "w") as json_file:
+    with open("../../models/cnn/cnn_lstm__32_.json", "w") as json_file:
         json_file.write(model_json)
-    model.save_weights("../../models/cnn/cnn_lstm__3_.h5")
-    file = open("../../models/cnn/cnn_lstm___3_.txt", "w")
+    model.save_weights("../../models/cnn/cnn_lstm__32_.h5")
+    file = open("../../models/cnn/cnn_lstm___32_.txt", "w")
     los = "loss:"+str(score[0])
     acc = "accuracy:" + str(score[1])
     file.write(los)

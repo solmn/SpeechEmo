@@ -1,9 +1,9 @@
 import librosa
 import os
 import numpy as np
-EMOTIONS = ['Happy', 'Sad', 'Angry', 'Neutral']
-input_path = "../../datasets/corpus/IEMOCAP_angry_sad_excited_neutral_test_train/"
-output_path = "../../datasets/features/cnn_lstm_features/"
+EMOTIONS = ['Positive', 'Negative', 'Neutral']
+input_path = "../../datasets/corpus/3_class/"
+output_path = "../../datasets/features/cnn_lstm_3_class_features/"
 def get_class_names ( path=""):
     class_names = os.listdir(path)
     return class_names
