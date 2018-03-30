@@ -54,6 +54,37 @@ def load_features(input_path =""):
     # print(Y_train[10][0])
     return X_train, Y_train, X_test, Y_test
 
+def b_model(X_train, Y_train, X_test, Y_test):
+    model = Sequential()
+    inpu_s = (None, X_train[0].shape[1], X_train[0].shape[2], X_train[0].shape[3])
+    model.add(TimeDistributed(Conv2D(64, kernel_size=(6,6), padding="valid", activation="relu"), input_shape=inpu_s))
+    model.add(TimeDistributed(Conv2D(64, kernel_size=(6,6), activation="relu", padding="same")))
+    model.add(TimeDistributed(MaxPooling2D(pool_size=(3, 3),  padding="same")))
+    model.add(TimeDistributed(Dropout(0.2)))
+
+    model.add(TimeDistributed(Conv2D(128, kernel_size=(6,6), activation="relu", padding="same")))
+    model.add(TimeDistributed(Conv2D(128, kernel_size=(6,6), activation="relu", padding="same")))
+    model.add(TimeDistributed(MaxPooling2D(pool_size=(3, 3),  padding="same")))
+    model.add(TimeDistributed(Dropout(0.2)))
+
+    # model.add(TimeDistributed(Conv2D(256, kernel_size=(6,6), activation="relu", padding="same")))
+    # model.add(TimeDistributed(Conv2D(256, kernel_size=(6,6), activation="relu", padding="same")))
+    # model.add(TimeDistributed(MaxPooling2D(pool_size=(3, 3),  padding="same")))
+    # model.add(TimeDistributed(Dropout(0.2)))
+
+    model.add(TimeDistributed(Flatten()))
+    model.add(TimeDistributed(Dense(1024, activation="relu")))
+    model.add(LSTM(512, return_sequences=True))
+    model.add(Dropout(0.2))
+    model.add(LSTM(512))
+    model.add(Dropout(0.2))
+    model.add(Dense(4))
+    model.add(Activation('softmax'))
+    model.compile(loss='categorical_crossentropy',
+              optimizer=Adam(lr=0.0001),
+              metrics=['accuracy'])
+    model.summary()
+    return model
 def build_model(X_train, Y_train, X_test, Y_test):
     model = Sequential()
     inpu_s = (None, X_train[0].shape[1], X_train[0].shape[2], X_train[0].shape[3])
@@ -69,11 +100,10 @@ def build_model(X_train, Y_train, X_test, Y_test):
     model.add(TimeDistributed(Dropout(0.2)))
     model.add(TimeDistributed(Flatten()))
     model.add(TimeDistributed(Dense(1024, activation="relu")))
-    model.add(Bidirectional(LSTM(128, return_sequences=True)))
+    model.add(Bidirectional(LSTM(64, return_sequences=True)))
     model.add(Dropout(0.2))
     model.add(Bidirectional(LSTM(64)))
     model.add(Dropout(0.2))
-    
     model.add(Dense(4))
     model.add(Dropout(0.27))
     model.add(Activation('softmax'))
@@ -140,10 +170,10 @@ def main():
     print('Test score:', score[0])
     print('Test accuracy:', score[1])
     model_json = model.to_json()
-    with open("../../models/cnn/cnn_lstm2.json", "w") as json_file:
+    with open("../../models/cnn/cnn_lstm__3_.json", "w") as json_file:
         json_file.write(model_json)
-    model.save_weights("../../models/cnn/cnn_lstm2.h5")
-    file = open("../../models/cnn/cnn_lstm_test22.txt", "w")
+    model.save_weights("../../models/cnn/cnn_lstm__3_.h5")
+    file = open("../../models/cnn/cnn_lstm___3_.txt", "w")
     los = "loss:"+str(score[0])
     acc = "accuracy:" + str(score[1])
     file.write(los)
