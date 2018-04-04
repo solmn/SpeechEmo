@@ -16,3 +16,8 @@
 * scipy
 * [python_speech_features](https://github.com/jameslyons/python_speech_features)
 
+
+**Datasets** 
+
+I have used Interactive Emotional Dyadic Motion Capture ([IEMOCAP](http://sail.usc.edu/iemocap/)) database. It is is an acted, multimodal and multispeaker database
+
