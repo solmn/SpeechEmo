@@ -38,7 +38,7 @@ IEMOCAP database is recorded in different session,each session contains a set of
 ```
 
 **Feature Extraction and Training**
-- Extract acoustic features(spectrogram and MFCC features) and train the modles.
+- Extract acoustic features(spectrogram and MFCC features) and train the models.
 
 ```
     # CNN model
