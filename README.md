@@ -21,3 +21,17 @@
 
 I have used Interactive Emotional Dyadic Motion Capture ([IEMOCAP](http://sail.usc.edu/iemocap/)) database. It is is an acted, multimodal and multispeaker database
 
+**How to label/format the dataset**
+
+IEMOCAP database is recorded in different session,each session contains a set of audios and corresponding evalutation script that helps us to segment the dataset based on emotional categories.
+
+- Change the directory to  ```src\utils``` folder and specify your IEMOCAP dataset path and output path in the utils.py 
+
+```
+   cd src/utils/
+   python utils.py
+```
+
+
+
+
