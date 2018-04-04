@@ -1,7 +1,7 @@
 # SpeechEmo
 - Emotional context classification from acoustic feature of speech signal
 
-- Contains Different version of deep learning networks and trained models
+- Contains Different version of deep learning networks and trained models written in Keras backend tensorflow.
   - CNN 
   - LSTM
   - CNN_LSTM
@@ -37,23 +37,30 @@ IEMOCAP database is recorded in different session,each session contains a set of
    python split.py 
 ```
 
-**Training**
-- Extract acoustic features(spectrogram and MFCC features) 
+**Feature Extraction and Training**
+- Extract acoustic features(spectrogram and MFCC features) and train the modles.
 
 ```
     # CNN model
     cd src/cnn/
     python cnn_feat_extract.py
+    python cnn_train.py
     
     # LSTM model
     cd src/rnn/
     python rnn_feat.py
+    python cnn_lstm_modle.py
+    
     
     # CNN_LSTM
     cd src/cnn_lst
     python feature_extract.py
+    python rnn_tray.py
     
-    
+    #CTC modle
+    cd src/ctc/
+    python utils/util.py
+    python ctc_tray.py
 ```
 
 
