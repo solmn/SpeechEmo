@@ -49,7 +49,7 @@ IEMOCAP database is recorded in different session,each session contains a set of
     # LSTM model
     cd src/rnn/
     python rnn_feat.py
-    python cnn_lstm_modle.py
+    python cnn_lstm_model.py
     
     
     # CNN_LSTM
