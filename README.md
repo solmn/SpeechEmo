@@ -31,7 +31,30 @@ IEMOCAP database is recorded in different session,each session contains a set of
    cd src/utils/
    python utils.py
 ```
+- To split the dataset to train and test set
 
+```
+   python split.py 
+```
+
+**Training**
+- Extract acoustic features(spectrogram and MFCC features) 
+
+```
+    # CNN model
+    cd src/cnn/
+    python cnn_feat_extract.py
+    
+    # LSTM model
+    cd src/rnn/
+    python rnn_feat.py
+    
+    # CNN_LSTM
+    cd src/cnn_lst
+    python feature_extract.py
+    
+    
+```
 
 
 
