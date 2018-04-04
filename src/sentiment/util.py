@@ -70,5 +70,5 @@ class Util:
         strip_special_chars = re.compile("[^A-Za-z0-9 ]+")
         string = string.lower().replace("<br />", " ")
         return re.sub(strip_special_chars, "", string.lower())      
-# u = Util()
-# u.get_other_data()
+u = Util()
+u.get_other_data()

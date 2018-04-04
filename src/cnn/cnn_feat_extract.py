@@ -1,4 +1,3 @@
-import glob
 import os
 import librosa
 import matplotlib.pyplot as plt
@@ -118,8 +117,6 @@ def preprocess_test_train(input_path = "", output_path = ""):
 def main():
     # preprocess(input_path = "../../datasets/corpus/cnn_imeocap_all_dataset_agumented/", output_path = "../../datasets/features/cnn/cnn_augumented/")
     preprocess_test_train(input_path = "../../datasets/corpus/IEMOCAP_angry_sad_excited_neutral_test_train/", output_path = "../../datasets/features/cnn/cnn_test/")
-
-
 main()
 
                 
