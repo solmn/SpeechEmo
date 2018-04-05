@@ -55,12 +55,12 @@ IEMOCAP database is recorded in different session,each session contains a set of
     # CNN_LSTM
     cd src/cnn_lst
     python feature_extract.py
-    python rnn_tray.py
+    python rnn_train.py
     
     #CTC modle
     cd src/ctc/
     python utils/util.py
-    python ctc_tray.py
+    python ctc_train.py
 ```
 
 
